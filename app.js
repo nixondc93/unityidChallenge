@@ -1,8 +1,5 @@
 $( document ).ready(function() {
     console.log( "ready!" );
-
-
-
     $.ajax({
     url: "https://www.random.org/integers/?num=10000&min=0&max=255&col=128&base=10&format=plain&rnd=new",
     success: success,
@@ -11,20 +8,28 @@ $( document ).ready(function() {
 
 });
 
-
-var bmp = new Bitmap(128, 128);
-    
-
 function success(data){
-    data = data.split(/\s/);
-    console.log(data);
-    for(var i = 0; i < 128; i++){
-        for(var j = 0; j < 128; j++){
-            bmp.pixel[i][j] = [];
-        }
-    }
+    data = data + " " + data;
+    data = data + " " + data;
+    data = data + " " + data;
+    data = data + " " + data;
 
-    console.log(data);
+    data = data.split(/\s/);
+
+    var canvas = document.createElement('canvas');
+    canvas.width = window.innerWidth/2;
+    canvas.height = window.innerWidth/2;
+    $('body').append(canvas);
+    var ctx = canvas.getContext("2d");
+    var imgData = ctx.createImageData(128, 128);
+    var i;
+    for (i = 0; i < imgData.data.length; i += 4) {
+        imgData.data[i+0] = parseInt(data[i]);
+        imgData.data[i+1] = parseInt(data[i+1]);
+        imgData.data[i+2] = parseInt(data[i+2]);
+        imgData.data[i+3] = 255;
+    }
+    ctx.putImageData(imgData, 0, 0);
 }
 
 function error(err){
